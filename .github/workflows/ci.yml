@@ -1,0 +1,30 @@
+# Stage 4: the same single command the agent runs locally is the merge gate.
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync
+      - run: make check
+
+  integration:
+    # Graph tests against a real Neo4j (marked `neo4j`, so excluded from make check).
+    runs-on: ubuntu-latest
+    services:
+      neo4j:
+        image: neo4j:5.26-community
+        env:
+          NEO4J_AUTH: neo4j/medgraph-dev
+        ports: ["7687:7687"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync
+      - run: uv run pytest -m neo4j || [ $? -eq 5 ]   # exit 5 = no tests collected yet
