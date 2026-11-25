@@ -1,0 +1,22 @@
+# Data: SNOMED CT is licensed and guideline PDFs are copyrighted. Never commit them.
+data/
+runs/
+*.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+
+# Transient Claude Code switches and local settings (.claude/gold-lock IS committed)
+.claude/fix-mode
+.claude/settings.local.json
+
+# Env
+.env
+.DS_Store
